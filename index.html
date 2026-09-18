@@ -797,9 +797,15 @@ document.getElementById("mailBtn").addEventListener("click",function(){
   var p=readProject();
   var subj="แบบสำรวจรายการรายได้ Payroll - "+(p.code||"โครงการ");
   var body=textSummary(rows);
-  if(body.length>1600) body=body.slice(0,1600)+"\n... (รายละเอียดทั้งหมดอยู่ในไฟล์ CSV ที่แนบ)";
-  window.location.href="mailto:"+HR_EMAIL+"?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
-  flash("เปิดโปรแกรมอีเมลแล้ว อย่าลืมแนบไฟล์ CSV ก่อนกดส่ง");
+  if(body.length>1500) body=body.slice(0,1500)+"\n... (รายละเอียดทั้งหมดอยู่ในไฟล์ CSV ที่แนบ)";
+  var qs="to="+encodeURIComponent(HR_EMAIL)+"&su="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
+  var gmail="https://mail.google.com/mail/?view=cm&fs=1&"+qs;
+  var mailto="mailto:"+HR_EMAIL+"?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
+  var w=null;
+  try{ w=window.open(gmail,"_blank","noopener"); }catch(e){}
+  if(!w){ try{ window.location.href=mailto; }catch(e){} }
+  flash('เปิดหน้าต่างร่างอีเมลถึง '+HR_EMAIL+' แล้ว อย่าลืมกดดาวน์โหลด CSV แล้วแนบไฟล์ก่อนส่ง'
+    +'<br><span style="font-weight:400">ถ้าหน้าต่างไม่ขึ้น ใช้ <a href="'+mailto+'">โปรแกรมอีเมลในเครื่อง</a> หรือคัดลอกสรุปแล้ววางในอีเมลเอง</span>');
 });
 
 
