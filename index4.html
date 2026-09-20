@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>แบบสำรวจรายการรายได้ Payroll – ฐานค่าจ้างกองทุนสงเคราะห์ลูกจ้าง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff;
+  --surface:#f4f6f8;
+  --line:#dbe2e8;
+  --line-strong:#b9c5d0;
+  --ink:#152230;
+  --ink-soft:#5a6b7c;
+  --base:#1b6b57;
+  --base-bg:#e6f2ee;
+  --fix:#9c5a06;
+  --fix-bg:#fbeedb;
+  --out:#3f5670;
+  --out-bg:#e9edf3;
+  --danger:#a32b2b;
+  --focus:#1b6b57;
+  --radius:10px;
+  --shadow:0 1px 0 rgba(21,34,48,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111a24;
+    --surface:#0c141c;
+    --line:#26333f;
+    --line-strong:#3a4b5a;
+    --ink:#e7edf3;
+    --ink-soft:#9aabbb;
+    --base:#5fc9a9;
+    --base-bg:#12302a;
+    --fix:#e6ab58;
+    --fix-bg:#33260f;
+    --out:#a9bdd3;
+    --out-bg:#1a2531;
+    --danger:#f08b8b;
+    --focus:#5fc9a9;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111a24;
+  --surface:#0c141c;
+  --line:#26333f;
+  --line-strong:#3a4b5a;
+  --ink:#e7edf3;
+  --ink-soft:#9aabbb;
+  --base:#5fc9a9;
+  --base-bg:#12302a;
+  --fix:#e6ab58;
+  --fix-bg:#33260f;
+  --out:#a9bdd3;
+  --out-bg:#1a2531;
+  --danger:#f08b8b;
+  --focus:#5fc9a9;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--surface);
+  color:var(--ink);
+  font-family:"IBM Plex Sans Thai","Noto Sans Thai","Sarabun",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.65;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:0 18px 80px}
+header.top{border-bottom:1px solid var(--line);background:var(--paper)}
+.top-in{max-width:1000px;margin:0 auto;padding:22px 18px 18px}
+h1{font-size:1.35rem;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
+.sub{color:var(--ink-soft);margin:0;max-width:70ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:.86rem;color:var(--ink-soft)}
+.meta b{color:var(--ink);font-weight:500}
+nav.steps{display:flex;gap:4px;flex-wrap:wrap;margin:18px 0 0;border-bottom:1px solid var(--line)}
+nav.steps button{
+  background:none;border:0;border-bottom:2px solid transparent;
+  color:var(--ink-soft);font:inherit;font-size:.92rem;padding:9px 12px;cursor:pointer;
+}
+nav.steps button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--base);font-weight:600}
+nav.steps button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+.step-n{display:inline-block;min-width:1.35em;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+nav.steps button[aria-selected="true"] .step-n{color:var(--base)}
+section.panel{display:none;margin-top:26px}
+section.panel.on{display:block}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.card + .card{margin-top:14px}
+h2{font-size:1.05rem;margin:0 0 4px;font-weight:600}
+h3{font-size:.98rem;margin:0;font-weight:600}
+.hint{color:var(--ink-soft);font-size:.87rem;margin:0 0 16px;max-width:72ch}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:720px){.grid,.grid.three{grid-template-columns:1fr}}
+label.f{display:block;font-size:.85rem;font-weight:500;margin-bottom:5px}
+label.f span.req{color:var(--danger)}
+input[type=text],input[type=number],select,textarea{
+  width:100%;padding:9px 11px;border:1px solid var(--line-strong);border-radius:8px;
+  background:var(--paper);color:var(--ink);font:inherit;font-size:.92rem;
+}
+textarea{min-height:64px;resize:vertical}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;appearance:none;margin:0}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--focus);outline-offset:1px;border-color:var(--focus)}
+.btn{
+  font:inherit;font-size:.92rem;font-weight:500;padding:9px 16px;border-radius:8px;cursor:pointer;
+  border:1px solid var(--line-strong);background:var(--paper);color:var(--ink);
+}
+.btn:hover{border-color:var(--ink-soft)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.btn.primary{background:var(--base);border-color:var(--base);color:#fff}
+.btn.primary:hover{opacity:.9}
+.btn.ghost{background:none;border-style:dashed}
+.btn.small{padding:5px 10px;font-size:.84rem}
+.btn.link{border:0;background:none;color:var(--ink-soft);text-decoration:underline;padding:4px 6px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;align-items:center}
+.spacer{flex:1}
+.pos{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);margin-bottom:14px;overflow:hidden}
+.pos-head{display:flex;gap:12px;align-items:center;padding:12px 14px;background:var(--paper);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.pos-head .ttl{font-weight:600;flex:1;min-width:140px}
+.pos-head .cnt{color:var(--ink-soft);font-size:.85rem;font-variant-numeric:tabular-nums}
+.pos-body{padding:14px}
+.item{border-left:3px solid var(--line-strong);background:var(--surface);border-radius:0 8px 8px 0;padding:14px;margin-bottom:12px}
+.item.v-base{border-left-color:var(--base)}
+.item.v-fix{border-left-color:var(--fix)}
+.item.v-out{border-left-color:var(--out)}
+.item-top{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.item-top .no{font-size:.82rem;color:var(--ink-soft);font-variant-numeric:tabular-nums;padding-top:9px}
+.verdict{margin-top:12px;border-radius:8px;padding:11px 13px;font-size:.88rem}
+.verdict .tag{display:inline-block;font-weight:600;margin-bottom:3px}
+.verdict.base{background:var(--base-bg);color:var(--base)}
+.verdict.fix{background:var(--fix-bg);color:var(--fix)}
+.verdict.out{background:var(--out-bg);color:var(--out)}
+.verdict p{margin:2px 0;color:var(--ink)}
+.verdict .docs{margin:6px 0 0;padding-left:18px;color:var(--ink)}
+.verdict .docs li{margin:1px 0}
+.verdict.idle{background:var(--out-bg);color:var(--ink-soft)}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--ink-soft);font-size:.82rem}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-top:2px solid var(--line-strong);border-bottom:0;font-weight:600}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.78rem;font-weight:500;white-space:nowrap}
+.pill.base{background:var(--base-bg);color:var(--base)}
+.pill.fix{background:var(--fix-bg);color:var(--fix)}
+.pill.out{background:var(--out-bg);color:var(--out)}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.kpi{display:grid;gap:12px;grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:6px}
+@media(max-width:720px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi div{background:var(--surface);border-radius:8px;padding:11px 13px}
+.kpi .n{font-size:1.3rem;font-weight:600;font-variant-numeric:tabular-nums;display:block;line-height:1.3}
+.kpi .l{font-size:.8rem;color:var(--ink-soft)}
+.note{background:var(--surface);border-radius:8px;padding:12px 14px;font-size:.87rem;color:var(--ink-soft);margin-top:14px}
+.err{color:var(--danger);font-size:.86rem;margin-top:10px}
+.ok{background:var(--base-bg);color:var(--base);border-radius:8px;padding:14px;font-weight:500}
+.empty{color:var(--ink-soft);font-size:.9rem;padding:18px 0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.83rem;color:var(--ink-soft);margin-top:14px}
+.legend span b{font-weight:600}
+details.ref{margin-top:14px}
+details.ref summary{cursor:pointer;font-size:.88rem;color:var(--ink-soft)}
+details.ref ul{font-size:.87rem;color:var(--ink-soft);padding-left:20px}
+.sub-list{list-style:none;margin:0;padding:0}
+.sub-list li{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px;background:var(--paper)}
+.sub-list .h{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.sub-list .h b{font-weight:600}
+.sub-list .h span{color:var(--ink-soft);font-size:.85rem}
+#gate{display:none;max-width:560px;margin:60px auto;padding:26px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);text-align:center}
+#gate h2{margin-bottom:8px}
+#gate p{color:var(--ink-soft);font-size:.9rem;margin:6px 0}
+body.locked .wrap,body.locked nav.steps{display:none}
+body.locked #gate{display:block}
+.who{font-size:.82rem;color:var(--ink-soft);margin-top:10px}
+@media print{nav.steps,.actions,.btn{display:none}body{background:#fff}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <h1>แบบสำรวจรายการรายได้ที่จ่ายผ่าน Payroll</h1>
+    <p class="sub">สำหรับ Project Controller / Project Admin ตรวจสอบว่ารายการรายได้ของพนักงานแต่ละตำแหน่งในโครงการ ต้องนำมาคำนวณเป็นฐานค่าจ้างกองทุนสงเคราะห์ลูกจ้างหรือไม่ และรายการใดควรปรับเงื่อนไขการจ่าย หรือย้ายไปเบิกกับฝ่ายบัญชี</p>
+    <div class="meta">
+      <span>กำหนดส่ง <b>30 กันยายน 2569</b></span>
+      <span>เริ่มหักเงินสะสม <b>รอบค่าจ้างเดือนตุลาคม 2569</b></span>
+      <span>อัตราเงินสะสม/สมทบ <b>ฝ่ายละ 0.25%</b></span>
+      <span>สอบถาม <b>ฝ่ายทรัพยากรบุคคล</b></span>
+    </div>
+    <nav class="steps" role="tablist">
+      <button role="tab" id="tab-1" aria-selected="true" data-step="1"><span class="step-n">1</span> ข้อมูลโครงการ</button>
+      <button role="tab" id="tab-2" aria-selected="false" data-step="2"><span class="step-n">2</span> ตำแหน่งและรายการรายได้</button>
+      <button role="tab" id="tab-3" aria-selected="false" data-step="3"><span class="step-n">3</span> สรุปและส่งข้อมูล</button>
+    </nav>
+  </div>
+</header>
+
+<div id="gate">
+  <h2>กำลังตรวจสอบสิทธิ์…</h2>
+  <p>แบบสำรวจนี้เปิดให้เฉพาะอีเมลที่ฝ่ายทรัพยากรบุคคลกำหนดไว้เท่านั้น</p>
+</div>
+
+<div class="wrap">
+
+<!-- STEP 1 -->
+<section class="panel on" id="panel-1" role="tabpanel" aria-labelledby="tab-1">
+  <div class="card">
+    <h2>ข้อมูลโครงการและผู้กรอก</h2>
+    <p class="hint">ระบุชื่อโครงการตามที่ใช้เรียกภายใน ไม่ต้องกรอกชื่อพนักงานรายบุคคล</p>
+    <div class="grid">
+      <div style="grid-column:1/-1">
+        <label class="f" for="p-code">ชื่อโครงการ / ลูกค้า / แบรนด์ <span class="req">*</span></label>
+        <input type="text" id="p-code" placeholder="ระบุตามที่โครงการใช้เรียก">
+      </div>
+      <div>
+        <label class="f" for="p-name">ชื่อผู้กรอก <span class="req">*</span></label>
+        <input type="text" id="p-name" placeholder="ชื่อ-นามสกุล หรือรหัสพนักงาน">
+      </div>
+      <div>
+        <label class="f" for="p-role">ตำแหน่งผู้กรอก</label>
+        <select id="p-role">
+          <option>Project Controller</option>
+          <option>Project Admin</option>
+          <option>Supervisor</option>
+          <option>อื่นๆ</option>
+        </select>
+      </div>
+      <div>
+        <label class="f" for="p-contact">อีเมล / เบอร์ติดต่อ</label>
+        <input type="text" id="p-contact" placeholder="สำหรับให้ HR ติดต่อกลับ">
+      </div>
+      <div>
+        <label class="f" for="p-head">จำนวนพนักงานในโครงการ (คน)</label>
+        <input type="number" id="p-head" min="0" step="1" placeholder="0">
+      </div>
+      <div>
+        <label class="f" for="p-cycle">รอบการจ่ายค่าจ้าง</label>
+        <select id="p-cycle">
+          <option>รายเดือน (เดือนละครั้ง)</option>
+          <option>รายเดือน (เดือนละสองครั้ง)</option>
+          <option>รายวัน / ตามรอบที่โครงการกำหนด</option>
+        </select>
+      </div>
+      <div>
+        <label class="f" for="p-payer">ผู้คำนวณส่ง HR Payroll</label>
+        <input type="text" id="p-payer" placeholder="ชื่อหรือรหัสผู้คำนวณ">
+      </div>
+    </div>
+    <div class="actions">
+      <div class="spacer"></div>
+      <button class="btn primary" id="go2">ถัดไป: กรอกรายการรายได้</button>
+    </div>
+    <p class="err" id="err1" hidden></p>
+  </div>
+
+  <div class="card">
+    <h2>เกณฑ์ที่ใช้ตัดสิน</h2>
+    <p class="hint">ระบบจะจัดประเภทให้อัตโนมัติจากลักษณะการจ่ายที่ท่านเลือก ตามหลักเกณฑ์ของกรมสวัสดิการและคุ้มครองแรงงาน อ้างอิง พ.ร.บ. คุ้มครองแรงงาน พ.ศ. 2541</p>
+    <div class="tablewrap">
+    <table>
+      <tr><th style="width:38%">เข้าเกณฑ์ฐานค่าจ้าง</th><th>ไม่เข้าเกณฑ์</th></tr>
+      <tr>
+        <td>เงินตอบแทนการทำงานในเวลาปกติ · จ่ายประจำตามระยะเวลาหรือตามผลงานในเวลาปกติ · เงินที่ได้รับในวันหยุดและวันลาตามสิทธิ</td>
+        <td>ค่าล่วงเวลาและค่าทำงานในวันหยุด · โบนัสและเงินรางวัลครั้งคราว · เงินจูงใจที่มีเงื่อนไข/เป้าหมายชัดเจน · เงินชดเชยค่าใช้จ่ายที่เบิกตามจริงและมีหลักฐานตามหลักบัญชี</td>
+      </tr>
+    </table>
+    </div>
+    <div class="legend">
+      <span><b class="pill base">นับเป็นฐานค่าจ้าง</b> หัก 0.25% เข้ากองทุน</span>
+      <span><b class="pill fix">ต้องปรับเงื่อนไข</b> ปัจจุบันเข้าข่ายฐานค่าจ้าง</span>
+      <span><b class="pill out">ไม่นับเป็นฐานค่าจ้าง</b> ต้องมีเอกสารรองรับ</span>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2">
+  <div class="card">
+    <h2>ตำแหน่งงานในโครงการ</h2>
+    <p class="hint">เพิ่มทีละตำแหน่ง แล้วกรอกรายการรายได้ทุกรายการที่จ่ายจริงให้ตำแหน่งนั้น รวมรายการที่จ่ายเป็นครั้งคราวด้วย</p>
+    <div id="positions"></div>
+    <div class="actions">
+      <button class="btn ghost" id="addPos">+ เพิ่มตำแหน่ง</button>
+      <div class="spacer"></div>
+      <button class="btn" id="back1">ย้อนกลับ</button>
+      <button class="btn primary" id="go3">ถัดไป: ดูสรุป</button>
+    </div>
+    <p class="err" id="err2" hidden></p>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="panel" id="panel-3" role="tabpanel" aria-labelledby="tab-3">
+  <div class="card" id="summaryCard">
+    <h2>สรุปผลการจัดประเภท</h2>
+    <p class="hint">ตรวจความถูกต้องก่อนส่ง ยอดฐานค่าจ้างเป็นประมาณการต่อเดือนต่อคน ใช้สำหรับประเมินผลกระทบเท่านั้น</p>
+    <div id="summary"></div>
+  </div>
+  <div class="card">
+    <h2>ส่งข้อมูลกลับให้ฝ่ายทรัพยากรบุคคล</h2>
+    <p class="hint">กด “ส่งข้อมูลให้ HR” เพื่อบันทึกเข้าระบบ หรือจะดาวน์โหลด CSV และส่งทางอีเมลเพิ่มก็ได้ เมื่อส่งแล้วยังกลับมาแก้ไขและส่งใหม่ได้ด้วยรหัสอ้างอิงเดิม</p>
+    <div>
+      <label class="f" for="p-note">หมายเหตุเพิ่มเติมถึง HR</label>
+      <textarea id="p-note" placeholder="เช่น รายการที่โครงการยังไม่มี scheme หรือประเด็นที่ต้องการให้ HR ช่วยพิจารณา"></textarea>
+    </div>
+    <div class="actions">
+      <button class="btn" id="back2">ย้อนกลับ</button>
+      <div class="spacer"></div>
+      <button class="btn" id="copySum">คัดลอกสรุปเป็นข้อความ</button>
+      <button class="btn" id="mailBtn">เปิดอีเมลถึง HR</button>
+      <button class="btn" id="dlCsv">ดาวน์โหลดสรุป (CSV)</button>
+      <button class="btn primary" id="submitBtn">ส่งข้อมูลให้ HR</button>
+    </div>
+    <p class="err" id="err3" hidden></p>
+    <div id="submitOk" hidden></div>
+    <div class="note">ไฟล์ CSV เปิดด้วย Excel ได้ทันที แนบส่งอีเมลหรือกลุ่มงานให้ฝ่ายทรัพยากรบุคคล พร้อมเก็บแฟ้มเอกสารประกอบตามที่ระบบแจ้งไว้ในแต่ละรายการ</div>
+  </div>
+</section>
+
+<details class="ref">
+  <summary>รายการรายได้ที่ต้องเตรียมเอกสาร และผู้รับผิดชอบ</summary>
+  <ul>
+    <li>ค่าน้ำมัน / ค่าที่พัก / ค่าทางด่วน / ค่าไปรษณีย์ / ค่าโทรศัพท์ — จ่ายตามจริงพร้อมใบเสร็จรับเงินในนามบริษัท ใบขอเบิก และ Traveling ส่งทุกวันอังคารหรือตามรอบที่ฝ่ายบัญชีกำหนด ผู้จ่าย: ฝ่ายบัญชี</li>
+    <li>Incentive / Commission — ต้องมี Scheme การจ่ายและเป้าการขาย สรุปทุกเดือน เก็บไว้พร้อมตรวจได้ทุกเมื่อ ผู้ดำเนินการ: Admin Project ส่ง HR</li>
+    <li>เบี้ยขยัน / ค่าตอบแทนกิจกรรม Demo / Tasting / ค่าโฟน — ต้องมี Scheme ที่มีเป้าขั้นต่ำ ทำถึงจึงได้รับ ผู้จ่าย: ฝ่ายบัญชี</li>
+    <li>เบี้ยเลี้ยง — จ่ายเฉพาะเมื่อออกไปปฏิบัติงานนอกสถานที่จริง หยุดจ่ายเมื่อไม่มีการเดินทาง ผู้จ่าย: ฝ่ายบัญชี</li>
+    <li>ค่าสึกหรอรถ / ค่าเสื่อม / ค่าให้บริการต่างๆ — คำนวณตามการใช้รถเพื่อปฏิบัติงานจริง มี Mileage Log ใบเสร็จค่าบำรุงรักษา และรายงานการเดินทาง ผู้จ่าย: ฝ่ายบัญชี</li>
+    <li>ค่าเช่ารถ — ต้องมีสัญญาเช่าระบุระยะเวลาและค่าเช่าประกอบ</li>
+  </ul>
+</details>
+
+</div>
+
+<script>
+"use strict";
+
+/* ---------- catalog ---------- */
+var CAT = [
+  {v:"เงินเดือน / ค่าจ้างรายเดือน", c:"core"},
+  {v:"ค่าจ้างรายวัน", c:"core"},
+  {v:"ค่าจ้างในวันหยุดและวันลาตามสิทธิ", c:"core"},
+  {v:"ค่าประจำตำแหน่ง", c:"corecond"},
+  {v:"ค่าครองชีพ / ค่าตอบแทนพิเศษรายเดือน", c:"corecond"},
+  {v:"ค่าล่วงเวลา (OT) / ค่าทำงานวันหยุด", c:"ot"},
+  {v:"โบนัส / เงินรางวัลเป็นครั้งคราว", c:"occasional"},
+  {v:"Incentive (ตามเป้าการขาย)", c:"incentive"},
+  {v:"Commission / Sell-in", c:"incentive"},
+  {v:"เบี้ยขยัน / เบี้ยวินัย", c:"incentive"},
+  {v:"ค่าตอบแทนกิจกรรม Demo / Tasting", c:"incentive"},
+  {v:"ค่าเบี้ยเลี้ยง", c:"perdiem"},
+  {v:"ค่ารถ / ค่าเดินทาง", c:"expense"},
+  {v:"ค่าน้ำมัน", c:"expense"},
+  {v:"ค่าที่พัก", c:"expense"},
+  {v:"ค่าทางด่วน / ค่าจอดรถ", c:"expense"},
+  {v:"ค่าโทรศัพท์", c:"expense"},
+  {v:"ค่าไปรษณีย์ / ค่าจัดส่ง", c:"expense"},
+  {v:"ค่าสึกหรอรถ / ค่าเสื่อม", c:"wear"},
+  {v:"ค่าเช่ารถ", c:"rent"},
+  {v:"เบี้ยเสี่ยงภัย (พื้นที่เสี่ยง)", c:"risk"},
+  {v:"ค่าชุดยูนิฟอร์ม / อุปกรณ์ปฏิบัติงาน", c:"expense"},
+  {v:"อื่นๆ (ระบุ)", c:"other"}
+];
+var MODES = [
+  {v:"A", t:"จ่ายคงที่ทุกงวด ไม่มีเงื่อนไข (เหมาจ่าย)"},
+  {v:"B", t:"จ่ายเหมาตามจำนวนวันที่มาปฏิบัติงาน"},
+  {v:"C", t:"เบิกตามค่าใช้จ่ายจริง มีใบเสร็จ/หลักฐาน"},
+  {v:"D", t:"จ่ายเป็น % ของยอดขายตั้งแต่บาทแรก ไม่มีเป้าขั้นต่ำ"},
+  {v:"E", t:"จ่ายเมื่อทำถึงเป้า/step ที่กำหนด ทำไม่ถึงไม่จ่าย"},
+  {v:"F", t:"จ่ายเป็นครั้งคราว เฉพาะเมื่อเกิดภารกิจ/ตามดุลพินิจ"}
+];
+var POS_PRESET = ["PC","BA","Merchandiser","Sampling / Promoter","Supervisor","Coordinator","Driver","Stock / Warehouse","อื่นๆ"];
+
+/* ---------- rules engine ---------- */
+var D = {
+  bill:["ใบเสร็จรับเงินในนามบริษัท","ใบขอเบิก","แบบฟอร์ม Traveling"],
+  scheme:["Scheme การจ่ายที่ระบุวัตถุประสงค์เพื่อจูงใจ","เป้าหมาย/เกณฑ์การได้รับเงิน","สรุปผลรายเดือนเก็บไว้ตรวจสอบ"],
+  mile:["Mileage Log หรือรายงานการเดินทาง","ใบเสร็จค่าบำรุงรักษา"],
+  lease:["สัญญาเช่ารถระบุระยะเวลาและค่าเช่า"],
+  travel:["Scheme การจ่ายเบี้ยเลี้ยง","รายงานการออกปฏิบัติงานนอกสถานที่"]
+};
+function R(s,reason,action,docs){return {s:s,reason:reason,action:action,docs:docs||[]};}
+
+function classify(it){
+  var c = it.cat, m = it.mode, scheme = it.scheme, bill = it.bill;
+  if(!c || !m) return null;
+
+  if(c==="core") return R("base","เป็นเงินตอบแทนการทำงานในเวลาปกติตามสัญญาจ้าง","คงไว้ใน Payroll และนับเข้าฐานค่าจ้าง");
+  if(c==="ot") return R("out","เป็นเงินตอบแทนการทำงานนอกเวลาทำงานปกติ","คงไว้ใน Payroll แต่ไม่นับเข้าฐานค่าจ้าง");
+
+  if(c==="corecond"){
+    if(m==="A"||m==="B") return R("base","จ่ายประจำโดยไม่มีเงื่อนไข ถือเป็นค่าตอบแทนการทำงานปกติ","คงไว้ใน Payroll และนับเข้าฐานค่าจ้าง");
+    if(m==="E") return scheme==="yes"
+      ? R("out","จ่ายตามเงื่อนไข/เป้าหมายที่กำหนดไว้ชัดเจน ไม่ใช่ค่าตอบแทนการทำงานปกติ","คงไว้ใน Payroll ไม่นับเข้าฐานค่าจ้าง ส่ง scheme ให้ HR เก็บไว้",D.scheme)
+      : R("fix","อ้างว่ามีเงื่อนไขแต่ยังไม่มีเอกสาร scheme รองรับ จึงยังถือเป็นค่าจ้าง","จัดทำ scheme และประกาศเงื่อนไขการจ่าย ส่งให้ HR ภายในรอบนี้",D.scheme);
+    if(m==="C") return R("out","เบิกตามค่าใช้จ่ายจริงพร้อมหลักฐาน ถือเป็นการชดเชยค่าใช้จ่าย","ย้ายไปเบิกกับฝ่ายบัญชีตามรอบ",D.bill);
+    return R("fix","จ่ายในลักษณะไม่แน่นอนแต่ไม่มีเกณฑ์รองรับ","ทบทวนเงื่อนไขการจ่ายร่วมกับ HR",D.scheme);
+  }
+
+  if(c==="occasional"){
+    if(m==="A"||m==="B") return R("fix","แม้เรียกว่าโบนัส แต่จ่ายคงที่ทุกงวดจึงเข้าลักษณะค่าจ้าง","กำหนดเงื่อนไขการจ่ายให้ชัดเจน หรือปรับไปจ่ายตามผลงาน/ครั้งคราว",D.scheme);
+    if(m==="D") return R("base","จ่ายตามผลงานในเวลาทำงานปกติตั้งแต่บาทแรก","คงไว้ใน Payroll และนับเข้าฐานค่าจ้าง");
+    return R("out","เป็นเงินรางวัลที่จ่ายเป็นครั้งคราว ไม่ใช่ค่าตอบแทนการทำงานปกติ","คงไว้ใน Payroll ไม่นับเข้าฐานค่าจ้าง เก็บหลักเกณฑ์การจ่ายไว้ตรวจสอบ",D.scheme);
+  }
+
+  if(c==="incentive"){
+    if(m==="D") return R("base","จ่ายเป็น % จากบาทแรกโดยไม่มีเป้าขั้นต่ำ ถือเป็นการจ่ายตามผลงานในเวลาปกติ","คงไว้ใน Payroll และนับเข้าฐานค่าจ้าง");
+    if(m==="E") return scheme==="yes"
+      ? R("out","มีเป้าเป็น step ทำไม่ถึงไม่จ่าย และมีเอกสารกำหนดเงื่อนไขชัดเจน","คงไว้ใน Payroll ไม่นับเข้าฐานค่าจ้าง ส่ง scheme ให้ HR ทุกเดือน",D.scheme)
+      : R("fix","มีเป้าแต่ยังไม่มี scheme เป็นลายลักษณ์อักษร จึงยังถือเป็นค่าจ้าง","จัดทำ scheme ระบุวัตถุประสงค์เพื่อจูงใจและเป้าขั้นต่ำ ส่งให้ HR",D.scheme);
+    if(m==="A"||m==="B") return R("fix","จ่ายคงที่ทุกงวดโดยไม่มีเป้า จึงเข้าลักษณะค่าจ้าง","เปลี่ยนเป็นจ่ายเมื่อทำถึงเป้าที่กำหนด พร้อมจัดทำ scheme",D.scheme);
+    if(m==="F") return scheme==="yes"
+      ? R("out","จ่ายเป็นครั้งคราวตามเกณฑ์ที่กำหนดไว้","คงไว้ใน Payroll ไม่นับเข้าฐานค่าจ้าง เก็บเอกสารประกอบทุกครั้ง",D.scheme)
+      : R("fix","จ่ายเป็นครั้งคราวโดยไม่มีเกณฑ์รองรับ","จัดทำเกณฑ์การจ่ายและเก็บหลักฐานการอนุมัติแต่ละครั้ง",D.scheme);
+    return R("fix","ลักษณะการจ่ายไม่สอดคล้องกับประเภทเงินจูงใจ","ทบทวนเงื่อนไขการจ่ายร่วมกับ HR",D.scheme);
+  }
+
+  if(c==="perdiem"){
+    if(m==="C") return R("out","เบิกตามค่าใช้จ่ายจริงพร้อมหลักฐาน","ย้ายไปเบิกกับฝ่ายบัญชีตามรอบ",D.bill);
+    if(m==="F") return scheme==="yes"
+      ? R("out","จ่ายเฉพาะเมื่อออกปฏิบัติงานนอกสถานที่จริง และหยุดจ่ายเมื่อไม่มีภารกิจ","ย้ายไปเบิกกับฝ่ายบัญชีตามรอบ พร้อมรายงานการเดินทาง",D.travel)
+      : R("fix","จ่ายเฉพาะครั้งคราวแต่ไม่มีเกณฑ์และรายงานรองรับ","จัดทำ scheme เบี้ยเลี้ยงและรายงานการเดินทาง แล้วย้ายไปเบิกกับฝ่ายบัญชี",D.travel);
+    return R("fix","จ่ายเหมาโดยไม่ผูกกับการออกปฏิบัติงานจริง จึงเข้าลักษณะค่าจ้าง","เปลี่ยนเป็นจ่ายเฉพาะเมื่อออกปฏิบัติงานนอกสถานที่ และย้ายไปเบิกกับฝ่ายบัญชี",D.travel);
+  }
+
+  if(c==="expense"){
+    if(m==="C") return bill==="no"
+      ? R("fix","ระบุว่าเบิกตามจริงแต่ไม่มีใบเสร็จ/หลักฐานตามหลักบัญชี","รวบรวมใบเสร็จให้ครบตามที่ฝ่ายบัญชีกำหนด มิฉะนั้นต้องนับเข้าฐานค่าจ้าง",D.bill)
+      : R("out","เป็นการชดเชยค่าใช้จ่ายที่เกิดขึ้นจริงและมีหลักฐานประกอบ","ย้ายไปเบิกกับฝ่ายบัญชีตามรอบ ไม่จ่ายผ่าน Payroll",D.bill);
+    if(m==="A"||m==="B") return R("fix","จ่ายเหมาผ่าน Payroll โดยไม่มีบิลประกอบ จึงเข้าลักษณะค่าจ้าง","เปลี่ยนเกณฑ์จากจ่ายเหมาเป็นจ่ายตามค่าใช้จ่ายจริง และย้ายไปเบิกกับฝ่ายบัญชี",D.bill);
+    if(m==="F") return bill==="yes"
+      ? R("out","จ่ายเฉพาะเมื่อเกิดค่าใช้จ่ายจริงและมีหลักฐาน","ย้ายไปเบิกกับฝ่ายบัญชีตามรอบ",D.bill)
+      : R("fix","จ่ายเป็นครั้งคราวโดยไม่มีหลักฐานค่าใช้จ่าย","กำหนดให้แนบหลักฐานทุกครั้ง และย้ายไปเบิกกับฝ่ายบัญชี",D.bill);
+    return R("fix","ค่าใช้จ่ายในการทำงานไม่ควรผูกกับผลงานหรือยอดขาย","ทบทวนเกณฑ์การจ่ายและย้ายไปเบิกกับฝ่ายบัญชี",D.bill);
+  }
+
+  if(c==="wear"){
+    if(m==="C") return R("out","คำนวณตามการใช้รถเพื่อปฏิบัติงานจริงและมีหลักฐานประกอบ","ย้ายไปเบิกกับฝ่ายบัญชีตามรอบ ไม่เกินเพดานที่โครงการกำหนด",D.mile.concat(D.bill));
+    return R("fix","จ่ายเหมาโดยไม่มีหลักฐานการใช้รถ จึงเข้าลักษณะค่าจ้าง","เปลี่ยนเป็นเบิกตามจริงไม่เกินเพดานที่โครงการกำหนด เช่น ค่าถ่ายน้ำมันเครื่อง เปลี่ยนยาง อะไหล่",D.mile.concat(D.bill));
+  }
+
+  if(c==="rent"){
+    if(m==="C") return R("out","เป็นค่าเช่าตามสัญญาและมีหลักฐานการจ่าย","ย้ายไปเบิกกับฝ่ายบัญชีตามรอบ",D.lease.concat(D.bill));
+    return R("fix","จ่ายเหมาผ่าน Payroll โดยไม่มีสัญญาเช่ารองรับ","จัดทำสัญญาเช่ารถระบุระยะเวลาและค่าเช่า แล้วย้ายไปเบิกกับฝ่ายบัญชี",D.lease);
+  }
+
+  if(c==="risk"){
+    if(m==="A") return R("base","จ่ายคงที่ทุกงวดแก่พนักงานที่ประจำพื้นที่ จึงเป็นค่าตอบแทนการทำงานปกติ","คงไว้ใน Payroll และนับเข้าฐานค่าจ้าง");
+    return R("out","จ่ายเฉพาะกรณีไปทำงานต่างพื้นที่เป็นครั้งคราว ไม่ได้อยู่ประจำ","คงไว้ใน Payroll ไม่นับเข้าฐานค่าจ้าง เก็บคำสั่งมอบหมายงานไว้ประกอบ",["คำสั่ง/บันทึกมอบหมายให้ปฏิบัติงานในพื้นที่"]);
+  }
+
+  /* other */
+  if(m==="C") return R("out","เบิกตามค่าใช้จ่ายจริงพร้อมหลักฐาน","ย้ายไปเบิกกับฝ่ายบัญชีตามรอบ",D.bill);
+  if(m==="E"&&scheme==="yes") return R("out","มีเงื่อนไขและเป้าหมายกำหนดไว้ชัดเจน","คงไว้ใน Payroll ไม่นับเข้าฐานค่าจ้าง ส่ง scheme ให้ HR",D.scheme);
+  if(m==="F") return R("out","จ่ายเป็นครั้งคราว ไม่สม่ำเสมอ","คงไว้ใน Payroll ไม่นับเข้าฐานค่าจ้าง เก็บหลักฐานการอนุมัติ",D.scheme);
+  if(m==="D") return R("base","จ่ายตามผลงานในเวลาทำงานปกติ","คงไว้ใน Payroll และนับเข้าฐานค่าจ้าง");
+  return R("fix","จ่ายประจำโดยไม่มีเงื่อนไขหรือหลักฐานรองรับ","ส่งรายละเอียดให้ HR พิจารณาเป็นรายกรณี",D.scheme);
+}
+var SLABEL = {base:"นับเป็นฐานค่าจ้าง", fix:"ต้องปรับเงื่อนไข", out:"ไม่นับเป็นฐานค่าจ้าง"};
+
+/* ---------- state ---------- */
+var HR_EMAIL="hr.sfcl@strikeforcethailand.com";
+/* === ตั้งค่า: วาง URL ของ Google Apps Script Web App ระหว่างเครื่องหมายคำพูด === */
+var ENDPOINT="";
+/* รายชื่ออีเมลที่ได้รับสิทธิ์ เก็บเป็นค่า hash (SHA-256) จึงอ่านอีเมลจริงจากหน้าเว็บไม่ได้
+   เพิ่ม/ลดรายชื่อ: ดูวิธีในไฟล์ README.md หัวข้อ "แก้ไขรายชื่อผู้มีสิทธิ์" */
+var ALLOW_HASH=["4ad866f961fa864aebcc30b8a799dda4d9711f4ac77eadd820d2d8790fc998bc", "707594eee7304acc45e66b1702a69fcaf89b9eacc4a621f162c55f79c180ce82", "c86405639654c3955e9868c8984094191006a8682bdc2588d94468337a5310ce", "6f0e837b3ede241f0df4405e93fdde882682a98ebdf961d7f540483f4610f20a", "f853e6c5aa54bc0eb62140cedafd9f216c7d64e4bcaa7d0af2e599e8ade9148c", "2132b835a7d12b6fbe0b704bcb82b73fa150eb26ef8a90f76d3fd7da867f2ae5", "ecad310885295e106ce61b31c9dd2ae73a4297d1fe7d7650b461457a52ca5960", "96d2e3731e723beab67d4e40480f48079f5d9d90a69242caab4a3d3d3ca6bc56", "a7df460cd412828fd5628100d15a0ea681c2c7508264f99256d677c5245f0d77", "2818855d468ab103b356660015c3f24842e26ffab0249002ccfcf5298da4a80c", "3692826b221cf86eb4dbeb01e8a0fde47803c68d6bd18b0445f5f11836775d75", "d52b4afb65fb53c949fbad441cb932a5080fba780031a2a89d3c417c88c6cc67", "c132d0c33e4966152230f47028a40179a93a8ddc964d9737f8ec464746ef54fe", "e8873044dc982aea31045dc7d3c04c858d6a73b78265b48297c02b2cd0c47bc7", "5d18d081c0238354fcc85c468c5cb1f5f66670f8c1b2d119d0163ddc80f3f2f0", "c3e34e857f122bf6855bbd7119f6cdfaa2f45e4307ce32b8fe8d1d691537fa9a", "304d77cd73ef80a38f05405e441eddee5feaceffbf6aa67bbf0aabc0514197a4", "a9440ce2772371ef896a1f84d735df986b9f58fec4727e86998d70630f51e39a", "0afb40339b0407bea896aad2cf6272d20284416fca73b02474988e2ba9396bc8", "5e72280d583e87e11a1ba653beb866de2fc64d82ee372671b715b3adf4bb87cd", "8aeb57dcd9bf4758a1b0802001801cde96f1dbfea133d9ceff177fb033a7ad1a", "f7e9d2de83e71cc3aafee2de9558d443b00a4952b25d80dd256b71b202834556", "1827760a2d8d0eabb4cf7311bffbf14dff90108434261ad9e385ed8fbabe9ab5", "c3ee18b9bf87daf26b3fa38a1f78c11adc82506bd670047fb3782c6d6f083cc6", "36d17a7b9b862c563aa3cd74db34df38fe36ef8f68b1de620303ab1087b85d4b", "90c385be30257cc8f6fa2e096f1dd25438d5a52708d986b00a07e06bf51d8e1d", "584b4699787491f15d69c4d03a7f50a59730eb5572ab15ddefd00349422dd496", "81a77da6c0c6392a03375288c7bc4c0fa7a04495bea063e8b5783645b0e57b52", "8f9053109792f839ff0754f17bc2ae6489dd03e86a3269e2e3ce1125f2292b5d", "40f05e75449094c348cdcb0f501d04de58a6476683b69706b2e0408afe209d66", "1e052489765754230ca30609c58050acf91c93416b4c71904b62f33d4d097983", "05ea7d027513047d25b4af180501126a38e8d854d75a5fb6e460510db9a8cf45", "76624f6b6e491212df2f8dc9f9186d48002458058b732cab502f8901cc30853f", "229ff8ef7d4a3ea6fdd22c13fb7008c6cd134e44759689b29389c12492a4d89f", "cdafd0099337ff7169da6bd26e2d69fbc5a3c08156b685ca8cfbe9797f089be4", "fa3c5b512ea0b937eeb4a4f472d8131b0e449ec16ef2d5fe1b47b69fa5373453", "905fa1421a314f4e468eac35d20c0ccabf4b2e2a100b2f1008c5e9ee159f027e", "4b1bf1df133b0d1374a399a87dcdb8820cb89b9e7f53d2641aa8119d42083d01", "e4f17f15ad9926d8cfdec4876cb97c1b3310f33eab488269da215afef62ca8f8", "b610c33c87b78fbc7cc083e08a761e683c59c8337077112479273464811b3360", "cf915c33701c7eb7d54f5637f1df7159906391470850897e877ec1719a65eeb9", "a9db4093bd166b73bf8f7241d3212ba215257f8acfa1ad5695e1107e002cd90f", "3cf5c96cb928ffd580b1deb3802932d7e386ae99374bb27765f3cce660bf3ea5", "74a0bb8d3cf8d1f51affeb49730b67fe82c6f96ca8fd1234a9e280f05196071c", "04754545e8f3356bbf4d7d156de41890177ceffd794a616566bb20396c955be4", "70024ccba9accffbf0e95bc2a9f2e6af2a1c155f69700c372187adaf0c6785b6", "d7841baf4c3f3c3a4651113e15da92a59a9968f4af5a6b413d641769468e68c0", "15a62ac78dac7df81f4e26269126540c153dd98e4c51eaff2a5cdc20a92e5358", "3921c800e35eaa990fb0f7bfa36aa49dc1455be2d5760c9a9946c66d3fcefeeb", "23ef3ae30101ab41dc0e105206a44ec0fc462197bb4cdad46a35b8781bde70a2", "e1787440c5aa709dbeb69b4443f2f6a930c8c6d2063c4359ed79230e7e80be50", "b991ca0f31089dbbadd691b39f117d3122a757ad2a8daaf37691f37166e12a91", "77745e7015b6f0a19d98b23c973f479b7cbf59ddd792f08df60bda12ae234c6f", "61adc19805e9a187e7e1fbb9f592d94dc6470cb3ed0523d3ef74b9c26b783bc9", "78327c00e3bfa899eaf6ff618e133214ecfb1147ba5d8591d5c79e8dfcd5d8e3", "079eb836e60afc37db66afdf3dfd08c7f685401f24751fc9ab11f1e53602f9d7"];
+var VIEWER={id:null,email:"",name:"",token:""};
+var IS_HR=false;
+var uid=0;
+function nid(){uid++;return "x"+Date.now().toString(36)+uid;}
+var state = {ref:null, project:{}, positions:[], note:""};
+
+function readProject(){
+  return {
+    code:val("p-code"), filler:val("p-name"), role:val("p-role"),
+    contact:val("p-contact"), head:val("p-head"), cycle:val("p-cycle"), payer:val("p-payer")
+  };
+}
+function val(id){var e=document.getElementById(id);return e?e.value.trim():"";}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function num(x){var n=parseFloat(String(x).replace(/,/g,""));return isFinite(n)?n:0;}
+function fmt(n){return (Math.round(n*100)/100).toLocaleString("th-TH",{minimumFractionDigits:0,maximumFractionDigits:2});}
+
+/* ---------- draft ---------- */
+function saveDraft(){
+  try{
+    state.project=readProject(); state.note=val("p-note");
+    localStorage.setItem("ewf-survey-draft", JSON.stringify(state));
+  }catch(e){}
+}
+function loadDraft(){
+  try{
+    var raw=localStorage.getItem("ewf-survey-draft"); if(!raw) return;
+    var d=JSON.parse(raw); if(!d||!d.positions) return;
+    state=d; state.positions=d.positions||[];
+    var p=d.project||{};
+    setv("p-code",p.code);setv("p-name",p.filler);setv("p-role",p.role);
+    setv("p-contact",p.contact);setv("p-head",p.head);setv("p-cycle",p.cycle);setv("p-payer",p.payer);
+    setv("p-note",d.note);
+  }catch(e){}
+}
+function setv(id,v){var e=document.getElementById(id);if(e&&v)e.value=v;}
+
+/* ---------- render positions ---------- */
+function optList(arr,sel,useObj){
+  var h='<option value=""'+(sel?"":" selected")+'>เลือก…</option>';
+  for(var i=0;i<arr.length;i++){
+    var v = useObj?arr[i].v:arr[i], t = useObj?arr[i].t:arr[i];
+    h+='<option value="'+esc(v)+'"'+(sel===v?" selected":"")+'>'+esc(t)+'</option>';
+  }
+  return h;
+}
+function catOptions(sel){
+  var h='<option value=""'+(sel?"":" selected")+'>เลือกรายการ…</option>';
+  for(var i=0;i<CAT.length;i++){
+    h+='<option value="'+esc(CAT[i].v)+'"'+(sel===CAT[i].v?" selected":"")+'>'+esc(CAT[i].v)+'</option>';
+  }
+  return h;
+}
+function catOf(name){for(var i=0;i<CAT.length;i++){if(CAT[i].v===name)return CAT[i].c;}return "other";}
+
+function renderPositions(){
+  var host=document.getElementById("positions");
+  if(!state.positions.length){
+    host.innerHTML='<p class="empty">ยังไม่มีตำแหน่ง กด “เพิ่มตำแหน่ง” เพื่อเริ่มกรอก</p>';
+    return;
+  }
+  var h="";
+  for(var i=0;i<state.positions.length;i++){
+    var p=state.positions[i];
+    h+='<div class="pos" data-p="'+p.id+'">';
+    h+='<div class="pos-head">';
+    h+='<div style="flex:1;min-width:200px"><label class="f" for="pn-'+p.id+'">ตำแหน่ง</label>';
+    h+='<select id="pn-'+p.id+'" data-act="posname" data-p="'+p.id+'">'+optList(POS_PRESET,p.name,false)+'</select></div>';
+    h+='<div style="width:150px"><label class="f" for="pc-'+p.id+'">จำนวน (คน)</label>';
+    h+='<input type="number" min="0" step="1" id="pc-'+p.id+'" value="'+esc(p.count||"")+'" data-act="poscount" data-p="'+p.id+'"></div>';
+    h+='<div style="width:170px"><label class="f" for="px-'+p.id+'">ระบุชื่อตำแหน่ง (ถ้าอื่นๆ)</label>';
+    h+='<input type="text" id="px-'+p.id+'" value="'+esc(p.custom||"")+'" data-act="poscustom" data-p="'+p.id+'"></div>';
+    h+='<button class="btn small" data-act="delpos" data-p="'+p.id+'">ลบตำแหน่ง</button>';
+    h+='</div><div class="pos-body">';
+    if(!p.items.length) h+='<p class="empty">ยังไม่มีรายการรายได้ในตำแหน่งนี้</p>';
+    for(var j=0;j<p.items.length;j++) h+=itemHtml(p.id,p.items[j],j+1);
+    h+='<button class="btn ghost small" data-act="additem" data-p="'+p.id+'">+ เพิ่มรายการรายได้</button>';
+    h+='</div></div>';
+  }
+  host.innerHTML=h;
+}
+
+function itemHtml(pid,it,n){
+  var v=classify(it);
+  var cls = v?("v-"+v.s):"";
+  var h='<div class="item '+cls+'" data-i="'+it.id+'">';
+  h+='<div class="item-top"><span class="no">'+n+'</span><div style="flex:1">';
+  h+='<div class="grid three">';
+  h+='<div><label class="f" for="in-'+it.id+'">รายการรายได้</label><select id="in-'+it.id+'" data-act="iname" data-p="'+pid+'" data-i="'+it.id+'">'+catOptions(it.name)+'</select></div>';
+  h+='<div><label class="f" for="ir-'+it.id+'">อัตราที่จ่าย</label><input type="text" id="ir-'+it.id+'" value="'+esc(it.rate||"")+'" placeholder="เช่น 300/เดือน · 100/วัน · 3%" data-act="irate" data-p="'+pid+'" data-i="'+it.id+'"></div>';
+  h+='<div><label class="f" for="im-'+it.id+'">ประมาณการต่อเดือน/คน (บาท)</label><input type="number" min="0" step="1" id="im-'+it.id+'" value="'+esc(it.amount||"")+'" data-act="iamount" data-p="'+pid+'" data-i="'+it.id+'"></div>';
+  h+='</div>';
+  if(it.name==="อื่นๆ (ระบุ)"){
+    h+='<div style="margin-top:12px"><label class="f" for="ic-'+it.id+'">ระบุชื่อรายการ</label><input type="text" id="ic-'+it.id+'" value="'+esc(it.custom||"")+'" data-act="icustom" data-p="'+pid+'" data-i="'+it.id+'"></div>';
+  }
+  h+='<div style="margin-top:12px"><label class="f" for="io-'+it.id+'">ลักษณะการจ่ายจริงในปัจจุบัน</label><select id="io-'+it.id+'" data-act="imode" data-p="'+pid+'" data-i="'+it.id+'">'+optList(MODES,it.mode,true)+'</select></div>';
+  h+='<div class="grid three" style="margin-top:12px">';
+  h+='<div><label class="f" for="is-'+it.id+'">มีเอกสาร scheme / ประกาศเงื่อนไขการจ่าย</label><select id="is-'+it.id+'" data-act="ischeme" data-p="'+pid+'" data-i="'+it.id+'">'
+    +'<option value=""'+(it.scheme?"":" selected")+'>เลือก…</option>'
+    +'<option value="yes"'+(it.scheme==="yes"?" selected":"")+'>มี และส่งให้ HR ได้</option>'
+    +'<option value="wip"'+(it.scheme==="wip"?" selected":"")+'>กำลังจัดทำ</option>'
+    +'<option value="no"'+(it.scheme==="no"?" selected":"")+'>ไม่มี</option></select></div>';
+  h+='<div><label class="f" for="ib-'+it.id+'">มีใบเสร็จ / หลักฐานค่าใช้จ่าย</label><select id="ib-'+it.id+'" data-act="ibill" data-p="'+pid+'" data-i="'+it.id+'">'
+    +'<option value=""'+(it.bill?"":" selected")+'>เลือก…</option>'
+    +'<option value="yes"'+(it.bill==="yes"?" selected":"")+'>มีครบทุกครั้ง</option>'
+    +'<option value="part"'+(it.bill==="part"?" selected":"")+'>มีบางส่วน</option>'
+    +'<option value="no"'+(it.bill==="no"?" selected":"")+'>ไม่มี</option>'
+    +'<option value="na"'+(it.bill==="na"?" selected":"")+'>ไม่เกี่ยวข้อง</option></select></div>';
+  h+='<div><label class="f" for="il-'+it.id+'">จ่ายในวันลา/วันหยุดตามสิทธิด้วยหรือไม่</label><select id="il-'+it.id+'" data-act="ileave" data-p="'+pid+'" data-i="'+it.id+'">'
+    +'<option value=""'+(it.leave?"":" selected")+'>เลือก…</option>'
+    +'<option value="yes"'+(it.leave==="yes"?" selected":"")+'>จ่าย</option>'
+    +'<option value="no"'+(it.leave==="no"?" selected":"")+'>ไม่จ่าย</option></select></div>';
+  h+='</div>';
+  h+='<div style="margin-top:12px"><label class="f" for="iz-'+it.id+'">หมายเหตุ</label><input type="text" id="iz-'+it.id+'" value="'+esc(it.note||"")+'" placeholder="เงื่อนไขเพิ่มเติม หรือข้อสังเกตของโครงการ" data-act="inote" data-p="'+pid+'" data-i="'+it.id+'"></div>';
+  h+='</div><button class="btn small" data-act="delitem" data-p="'+pid+'" data-i="'+it.id+'">ลบ</button></div>';
+
+  if(v){
+    h+='<div class="verdict '+v.s+'"><span class="tag">'+SLABEL[v.s]+'</span>';
+    h+='<p>'+esc(v.reason)+'</p>';
+    h+='<p><b>สิ่งที่ต้องทำ:</b> '+esc(v.action)+'</p>';
+    if(v.docs.length){
+      h+='<ul class="docs">';
+      for(var k=0;k<v.docs.length;k++) h+='<li>'+esc(v.docs[k])+'</li>';
+      h+='</ul>';
+    }
+    h+='</div>';
+  }else{
+    h+='<div class="verdict idle">เลือกรายการและลักษณะการจ่าย ระบบจะแสดงผลการจัดประเภททันที</div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+/* ---------- item helpers ---------- */
+function findPos(pid){for(var i=0;i<state.positions.length;i++){if(state.positions[i].id===pid)return state.positions[i];}return null;}
+function findItem(pid,iid){var p=findPos(pid);if(!p)return null;for(var i=0;i<p.items.length;i++){if(p.items[i].id===iid)return p.items[i];}return null;}
+function newItem(){return {id:nid(),name:"",custom:"",rate:"",amount:"",mode:"",scheme:"",bill:"",leave:"",note:"",cat:""};}
+
+document.addEventListener("click",function(e){
+  var t=e.target.closest ? e.target.closest("[data-act]") : null;
+  if(!t) return;
+  var act=t.getAttribute("data-act"), pid=t.getAttribute("data-p"), iid=t.getAttribute("data-i");
+  if(act==="delpos"){
+    state.positions=state.positions.filter(function(p){return p.id!==pid;});
+    renderPositions(); saveDraft();
+  }else if(act==="additem"){
+    var p=findPos(pid); if(p){p.items.push(newItem()); renderPositions(); saveDraft();}
+  }else if(act==="delitem"){
+    var p2=findPos(pid); if(p2){p2.items=p2.items.filter(function(x){return x.id!==iid;}); renderPositions(); saveDraft();}
+  }
+});
+
+document.addEventListener("change",function(e){
+  var t=e.target;
+  var act=t.getAttribute&&t.getAttribute("data-act"); if(!act) return;
+  var pid=t.getAttribute("data-p"), iid=t.getAttribute("data-i");
+  var p=findPos(pid);
+  if(act==="posname"&&p){p.name=t.value;}
+  else if(act==="poscount"&&p){p.count=t.value;}
+  else if(act==="poscustom"&&p){p.custom=t.value;}
+  else{
+    var it=findItem(pid,iid); if(!it) return;
+    if(act==="iname"){it.name=t.value; it.cat=catOf(t.value);}
+    else if(act==="irate"){it.rate=t.value; saveDraft(); return;}
+    else if(act==="iamount"){it.amount=t.value; saveDraft(); return;}
+    else if(act==="icustom"){it.custom=t.value; saveDraft(); return;}
+    else if(act==="inote"){it.note=t.value; saveDraft(); return;}
+    else if(act==="imode"){it.mode=t.value;}
+    else if(act==="ischeme"){it.scheme=t.value;}
+    else if(act==="ibill"){it.bill=t.value;}
+    else if(act==="ileave"){it.leave=t.value;}
+  }
+  renderPositions(); saveDraft();
+});
+
+document.getElementById("addPos").addEventListener("click",function(){
+  state.positions.push({id:nid(),name:"",custom:"",count:"",items:[newItem()]});
+  renderPositions(); saveDraft();
+});
+
+/* ---------- steps ---------- */
+function go(step){
+  var tabs=document.querySelectorAll("nav.steps button");
+  for(var i=0;i<tabs.length;i++){tabs[i].setAttribute("aria-selected", tabs[i].getAttribute("data-step")===String(step)?"true":"false");}
+  var panels=document.querySelectorAll("section.panel");
+  for(var j=0;j<panels.length;j++){panels[j].classList.toggle("on", panels[j].id==="panel-"+step);}
+  if(step===3) renderSummary();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelector("nav.steps").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-step]"); if(b) go(parseInt(b.getAttribute("data-step"),10));
+});
+document.getElementById("go2").addEventListener("click",function(){
+  var err=document.getElementById("err1");
+  if(!val("p-code")||!val("p-name")){err.textContent="กรอกชื่อโครงการ และชื่อผู้กรอกก่อนไปขั้นถัดไป";err.hidden=false;return;}
+  err.hidden=true; saveDraft();
+  if(!state.positions.length){state.positions.push({id:nid(),name:"",custom:"",count:"",items:[newItem()]});renderPositions();}
+  go(2);
+});
+document.getElementById("back1").addEventListener("click",function(){go(1);});
+document.getElementById("back2").addEventListener("click",function(){go(2);});
+document.getElementById("go3").addEventListener("click",function(){
+  var err=document.getElementById("err2");
+  var n=0;
+  state.positions.forEach(function(p){p.items.forEach(function(it){if(it.name&&it.mode)n++;});});
+  if(!n){err.textContent="กรอกรายการรายได้อย่างน้อย 1 รายการ พร้อมเลือกลักษณะการจ่าย";err.hidden=false;return;}
+  err.hidden=true; saveDraft(); go(3);
+});
+
+/* ---------- summary ---------- */
+function posLabel(p){return (p.name==="อื่นๆ"&&p.custom)?p.custom:(p.name||"ยังไม่ระบุตำแหน่ง");}
+function itemLabel(it){return (it.name==="อื่นๆ (ระบุ)"&&it.custom)?it.custom:(it.name||"-");}
+
+function computeRows(){
+  var rows=[];
+  state.positions.forEach(function(p){
+    p.items.forEach(function(it){
+      if(!it.name||!it.mode) return;
+      var v=classify(it); if(!v) return;
+      rows.push({pos:posLabel(p),count:num(p.count),item:itemLabel(it),rate:it.rate||"",amount:num(it.amount),
+        mode:it.mode,scheme:it.scheme,bill:it.bill,leave:it.leave,note:it.note||"",s:v.s,reason:v.reason,action:v.action,docs:v.docs.join(" · ")});
+    });
+  });
+  return rows;
+}
+function renderSummary(){
+  var rows=computeRows(), host=document.getElementById("summary");
+  if(!rows.length){host.innerHTML='<p class="empty">ยังไม่มีข้อมูล กลับไปกรอกรายการรายได้ก่อน</p>';return;}
+  var cB=0,cF=0,cO=0;
+  rows.forEach(function(r){if(r.s==="base")cB++;else if(r.s==="fix")cF++;else cO++;});
+  var h='<div class="kpi">';
+  h+='<div><span class="n">'+rows.length+'</span><span class="l">รายการทั้งหมด</span></div>';
+  h+='<div><span class="n" style="color:var(--base)">'+cB+'</span><span class="l">นับเป็นฐานค่าจ้าง</span></div>';
+  h+='<div><span class="n" style="color:var(--fix)">'+cF+'</span><span class="l">ต้องปรับเงื่อนไข</span></div>';
+  h+='<div><span class="n" style="color:var(--out)">'+cO+'</span><span class="l">ไม่นับเป็นฐานค่าจ้าง</span></div>';
+  h+='</div>';
+
+  var byPos={};
+  rows.forEach(function(r){ (byPos[r.pos]=byPos[r.pos]||[]).push(r); });
+  Object.keys(byPos).forEach(function(k){
+    var list=byPos[k], base=0, fix=0;
+    list.forEach(function(r){ if(r.s==="base")base+=r.amount; if(r.s==="fix")fix+=r.amount; });
+    h+='<h3 style="margin:22px 0 8px">'+esc(k)+' <span style="font-weight:400;color:var(--ink-soft);font-size:.88rem">'+(list[0].count?("· "+list[0].count+" คน"):"")+'</span></h3>';
+    h+='<div class="tablewrap"><table><thead><tr><th>รายการ</th><th>อัตรา</th><th class="num">ประมาณการ/เดือน</th><th>ผล</th><th>สิ่งที่ต้องทำ</th></tr></thead><tbody>';
+    list.forEach(function(r){
+      h+='<tr><td>'+esc(r.item)+'</td><td>'+esc(r.rate)+'</td><td class="num">'+(r.amount?fmt(r.amount):"-")+'</td>';
+      h+='<td><span class="pill '+r.s+'">'+SLABEL[r.s]+'</span></td><td>'+esc(r.action)+'</td></tr>';
+    });
+    h+='<tr class="total"><td colspan="2">ฐานค่าจ้างที่นับได้ในปัจจุบัน</td><td class="num">'+fmt(base+fix)+'</td><td colspan="2">รวมรายการที่ต้องปรับเงื่อนไข '+fmt(fix)+' บาท</td></tr>';
+    h+='<tr class="total"><td colspan="2">เงินสะสม EWF 0.25% ต่อคน/เดือน</td><td class="num">'+fmt((base+fix)*0.0025)+'</td><td colspan="2">หากปรับเงื่อนไขครบทุกรายการ จะเหลือ '+fmt(base*0.0025)+' บาท</td></tr>';
+    h+='</tbody></table></div>';
+  });
+  h+='<div class="note">รายการที่ขึ้นสถานะ “ต้องปรับเงื่อนไข” ยังถือเป็นฐานค่าจ้างจนกว่าจะปรับเกณฑ์การจ่ายหรือย้ายไปเบิกกับฝ่ายบัญชีเรียบร้อย และส่งเอกสารประกอบให้ฝ่ายทรัพยากรบุคคลเก็บไว้</div>';
+  host.innerHTML=h;
+}
+
+/* ---------- csv ---------- */
+function csvCell(s){s=String(s==null?"":s);return '"'+s.replace(/"/g,'""')+'"';}
+function buildCsv(rows, proj){
+  var head=["โครงการ/ลูกค้า","ผู้กรอก","ตำแหน่งงาน","จำนวนคน","รายการรายได้","อัตราที่จ่าย","ประมาณการต่อเดือน","ลักษณะการจ่าย","scheme","ใบเสร็จ","จ่ายวันลา/วันหยุด","ผลการจัดประเภท","เหตุผล","สิ่งที่ต้องทำ","เอกสารที่ต้องมี","หมายเหตุ"];
+  var out=[head.map(csvCell).join(",")];
+  rows.forEach(function(r){
+    out.push([proj.code,proj.filler,r.pos,r.count||"",r.item,r.rate,r.amount||"",
+      (MODES.filter(function(m){return m.v===r.mode;})[0]||{t:r.mode}).t,
+      r.scheme,r.bill,r.leave,SLABEL[r.s],r.reason,r.action,r.docs,r.note].map(csvCell).join(","));
+  });
+  return "\ufeff"+out.join("\r\n");
+}
+function offerDownload(filename,text){
+  try{
+    var blob=new Blob([text],{type:"text/csv;charset=utf-8"});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement("a");a.href=url;a.download=filename;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(url);},3000);
+    return true;
+  }catch(e){ return false; }
+}
+function fileBase(){return (val("p-code")||"project").replace(/[\s\/\\?%*:|"<>]+/g,"_");}
+function flash(html){var b=document.getElementById("submitOk");b.hidden=false;b.innerHTML='<div class="ok" style="margin-top:14px">'+html+'</div>';}
+function guard(){
+  var err=document.getElementById("err3"); err.hidden=true; saveDraft();
+  var rows=computeRows();
+  if(!rows.length){err.textContent="ยังไม่มีรายการรายได้ที่กรอกครบ กลับไปกรอกในขั้นที่ 2 ก่อน";err.hidden=false;return null;}
+  return rows;
+}
+document.getElementById("dlCsv").addEventListener("click",function(){
+  var rows=guard(); if(!rows) return;
+  var okd=offerDownload("payroll-survey-"+fileBase()+".csv", buildCsv(rows, readProject()));
+  if(okd) flash("ดาวน์โหลดไฟล์ CSV แล้ว แนบไฟล์ส่งให้ฝ่ายทรัพยากรบุคคลได้เลย");
+});
+
+function textSummary(rows){
+  var p=readProject(), L=[];
+  L.push("แบบสำรวจรายการรายได้ Payroll - ฐานค่าจ้าง EWF");
+  L.push("โครงการ/ลูกค้า: "+(p.code||"-"));
+  L.push("ผู้กรอก: "+(p.filler||"-")+" ("+(p.role||"-")+") "+(p.contact||""));
+  L.push("จำนวนพนักงาน: "+(p.head||"-")+" คน · รอบจ่าย: "+(p.cycle||"-"));
+  L.push("");
+  var cur="";
+  rows.forEach(function(r){
+    if(r.pos!==cur){cur=r.pos;L.push("["+cur+"]");}
+    L.push("- "+r.item+" ("+(r.rate||"-")+") => "+SLABEL[r.s]+" : "+r.action);
+  });
+  var fix=rows.filter(function(r){return r.s==="fix";});
+  L.push("");
+  L.push("สรุป: ทั้งหมด "+rows.length+" รายการ · นับเป็นฐานค่าจ้าง "+rows.filter(function(r){return r.s==="base";}).length
+    +" · ต้องปรับเงื่อนไข "+fix.length+" · ไม่นับเป็นฐานค่าจ้าง "+rows.filter(function(r){return r.s==="out";}).length);
+  if(val("p-note")) L.push("หมายเหตุ: "+val("p-note"));
+  return L.join("\n");
+}
+document.getElementById("copySum").addEventListener("click",function(){
+  var rows=guard(); if(!rows) return;
+  var txt=textSummary(rows);
+  function fallback(){
+    var ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy");flash("คัดลอกสรุปแล้ว วางในอีเมลหรือแชทได้เลย");}
+    catch(e){flash("คัดลอกอัตโนมัติไม่ได้ กดดาวน์โหลด CSV แทน");}
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){flash("คัดลอกสรุปแล้ว วางในอีเมลหรือแชทได้เลย");},fallback);
+  }else fallback();
+});
+document.getElementById("mailBtn").addEventListener("click",function(){
+  var rows=guard(); if(!rows) return;
+  var p=readProject();
+  var subj="แบบสำรวจรายการรายได้ Payroll - "+(p.code||"โครงการ");
+  var body=textSummary(rows);
+  if(body.length>1500) body=body.slice(0,1500)+"\n... (รายละเอียดทั้งหมดอยู่ในไฟล์ CSV ที่แนบ)";
+  var qs="to="+encodeURIComponent(HR_EMAIL)+"&su="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
+  var gmail="https://mail.google.com/mail/?view=cm&fs=1&"+qs;
+  var mailto="mailto:"+HR_EMAIL+"?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
+  var w=null;
+  try{ w=window.open(gmail,"_blank","noopener"); }catch(e){}
+  if(!w){ try{ window.location.href=mailto; }catch(e){} }
+  flash('เปิดหน้าต่างร่างอีเมลถึง '+HR_EMAIL+' แล้ว อย่าลืมกดดาวน์โหลด CSV แล้วแนบไฟล์ก่อนส่ง'
+    +'<br><span style="font-weight:400">ถ้าหน้าต่างไม่ขึ้น ใช้ <a href="'+mailto+'">โปรแกรมอีเมลในเครื่อง</a> หรือคัดลอกสรุปแล้ววางในอีเมลเอง</span>');
+});
+
+
+/* ---------- access gate (OTP ทางอีเมล) + log ---------- */
+var TOKEN_KEY="ewf-survey-token";
+function stamp(){return new Date().toISOString();}
+
+async function sha256hex(str){
+  if(!(window.crypto&&window.crypto.subtle)) return null;
+  var buf=await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.prototype.map.call(new Uint8Array(buf),function(b){return ("0"+b.toString(16)).slice(-2);}).join("");
+}
+function post(payload){
+  if(!ENDPOINT) return Promise.resolve({ok:false,error:"no endpoint"});
+  return fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)})
+    .then(function(r){return r.json();}).catch(function(){return {ok:false,error:"network"};});
+}
+function logEvent(kind,extra){
+  return post(Object.assign({type:"log",kind:kind,email:VIEWER.email,token:VIEWER.token,at:stamp(),ua:navigator.userAgent.slice(0,120)},extra||{}));
+}
+function saveSession(email,token,exp){
+  VIEWER.email=email; VIEWER.token=token;
+  try{ localStorage.setItem(TOKEN_KEY, JSON.stringify({email:email,token:token,exp:exp})); }catch(e){}
+}
+function loadSession(){
+  try{
+    var d=JSON.parse(localStorage.getItem(TOKEN_KEY)||"null");
+    if(d&&d.token&&d.exp&&Date.now()<d.exp){ VIEWER.email=d.email; VIEWER.token=d.token; return true; }
+  }catch(e){}
+  return false;
+}
+function accessRequestMailto(em){
+  var who=em||"";
+  var subj="ขอสิทธิ์เข้าใช้งานแบบสำรวจรายการรายได้ Payroll";
+  var body="เรียน ฝ่ายทรัพยากรบุคคล\n\n"
+    +"ขอสิทธิ์เข้าใช้งานแบบสำรวจรายการรายได้ Payroll\n"
+    +"อีเมลที่ใช้: "+who+"\n"
+    +"ชื่อ-นามสกุล: \n"
+    +"ตำแหน่ง: \n"
+    +"โครงการที่รับผิดชอบ: \n\n"
+    +"ขอบคุณค่ะ";
+  return "mailto:"+HR_EMAIL+"?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
+}
+function clearSession(){ VIEWER.email="";VIEWER.token=""; try{localStorage.removeItem(TOKEN_KEY);}catch(e){} }
+
+document.body.classList.add("locked");
+var gateEl=function(){return document.getElementById("gate");};
+function gErr(msg){var e=document.getElementById("gate-err"); if(e){e.textContent=msg;e.hidden=!msg;}}
+
+/* ขั้นที่ 1 : กรอกอีเมลเพื่อขอรหัส */
+function gateForm(prefill){
+  gateEl().innerHTML='<h2>ยืนยันตัวตนก่อนเข้าใช้งาน</h2>'
+    +'<p>แบบสำรวจนี้เปิดให้เฉพาะอีเมลบริษัทที่ฝ่ายทรัพยากรบุคคลกำหนดไว้</p>'
+    +'<div style="margin:16px 0;text-align:left"><label class="f" for="gate-email">อีเมลบริษัทของท่าน</label>'
+    +'<input type="text" id="gate-email" placeholder="กรอกอีเมลบริษัทของท่าน" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></div>'
+    +'<button class="btn primary" id="gate-go" style="width:100%">ส่งรหัสยืนยันทางอีเมล</button>'
+    +'<p class="err" id="gate-err" hidden></p>'
+    +'<p style="margin-top:14px">ไม่พบอีเมลของท่านในรายชื่อ <a href="'+accessRequestMailto()+'">กดที่นี่เพื่อขอสิทธิ์เข้าใช้งานจากฝ่ายทรัพยากรบุคคล</a></p>';
+  var inp=document.getElementById("gate-email");
+  if(prefill) inp.value=prefill;
+  else { try{ inp.value=localStorage.getItem("ewf-survey-email")||""; }catch(e){} }
+  async function send(){
+    var em=(inp.value||"").toLowerCase().trim();
+    gErr("");
+    var hx=await sha256hex(em);
+    if(!hx){ gErr("เบราว์เซอร์นี้ตรวจสอบสิทธิ์ไม่ได้ กรุณาเปิดผ่าน https หรือใช้เบราว์เซอร์รุ่นใหม่"); return; }
+    if(ALLOW_HASH.indexOf(hx)<0){
+      gErr("อีเมลนี้ไม่อยู่ในรายชื่อที่ได้รับสิทธิ์ ตรวจการสะกดอีกครั้ง หรือกดลิงก์ด้านล่างเพื่อขอสิทธิ์จากฝ่ายทรัพยากรบุคคล");
+      var link=document.querySelector("#gate a"); if(link) link.href=accessRequestMailto(em);
+      post({type:"denied",attempt:em.slice(0,80),at:stamp(),ua:navigator.userAgent.slice(0,120)});
+      return;
+    }
+    if(!ENDPOINT){ gErr("ระบบยังไม่ได้ตั้งค่าปลายทาง ติดต่อผู้ดูแลระบบ"); return; }
+    var btn=document.getElementById("gate-go"); btn.disabled=true; btn.textContent="กำลังส่งรหัส…";
+    var res=await post({type:"otp_request",email:em});
+    btn.disabled=false; btn.textContent="ส่งรหัสยืนยันทางอีเมล";
+    if(!res||!res.ok){
+      var msg = res&&res.error==="rate_limited" ? "ขอรหัสบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่"
+        : res&&res.error==="network" ? "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ตรวจสัญญาณอินเทอร์เน็ตแล้วลองอีกครั้ง"
+        : res&&res.error ? ("ส่งรหัสไม่สำเร็จ: "+res.error)
+        : "ส่งรหัสไม่สำเร็จ ลองอีกครั้ง";
+      gErr(msg); return;
+    }
+    try{ localStorage.setItem("ewf-survey-email",em); }catch(e){}
+    otpForm(em);
+  }
+  document.getElementById("gate-go").addEventListener("click",send);
+  inp.addEventListener("keydown",function(e){ if(e.key==="Enter") send(); });
+}
+
+/* ขั้นที่ 2 : กรอกรหัส OTP */
+function otpForm(email){
+  gateEl().innerHTML='<h2>กรอกรหัสยืนยัน</h2>'
+    +'<p>ส่งรหัส 6 หลักไปที่ <b>'+esc(email)+'</b> แล้ว</p>'
+    +'<p>รหัสมีอายุ 10 นาที หากไม่พบ ตรวจในกล่องจดหมายขยะ</p>'
+    +'<div style="margin:16px 0;text-align:left"><label class="f" for="gate-otp">รหัสยืนยัน 6 หลัก</label>'
+    +'<input type="text" id="gate-otp" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" style="letter-spacing:.35em;text-align:center;font-size:1.2rem"></div>'
+    +'<button class="btn primary" id="otp-go" style="width:100%">เข้าใช้งาน</button>'
+    +'<p class="err" id="gate-err" hidden></p>'
+    +'<div style="margin-top:14px"><button class="btn link" id="otp-resend">ส่งรหัสใหม่</button> · '
+    +'<button class="btn link" id="otp-back">เปลี่ยนอีเมล</button></div>';
+  var inp=document.getElementById("gate-otp"); inp.focus();
+  async function verify(){
+    var code=(inp.value||"").replace(/\D/g,"");
+    gErr("");
+    if(code.length!==6){ gErr("กรอกรหัส 6 หลักให้ครบ"); return; }
+    var btn=document.getElementById("otp-go"); btn.disabled=true; btn.textContent="กำลังตรวจสอบ…";
+    var res=await post({type:"otp_verify",email:email,code:code});
+    btn.disabled=false; btn.textContent="เข้าใช้งาน";
+    if(!res||!res.ok){
+      var m={expired:"รหัสหมดอายุแล้ว กดส่งรหัสใหม่",wrong:"รหัสไม่ถูกต้อง ลองอีกครั้ง",
+             too_many:"กรอกผิดหลายครั้ง กรุณาขอรหัสใหม่",network:"เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองอีกครั้ง",
+             auth:"เซสชันหมดอายุ กดส่งรหัสใหม่"};
+      gErr((res&&m[res.error]) || (res&&res.error ? ("ยืนยันไม่สำเร็จ: "+res.error) : "ยืนยันไม่สำเร็จ ลองอีกครั้ง")); return;
+    }
+    saveSession(email,res.token,res.exp||(Date.now()+12*3600*1000));
+    openApp();
+  }
+  document.getElementById("otp-go").addEventListener("click",verify);
+  inp.addEventListener("keydown",function(e){ if(e.key==="Enter") verify(); });
+  document.getElementById("otp-resend").addEventListener("click",function(){ gateForm(email); });
+  document.getElementById("otp-back").addEventListener("click",function(){ clearSession(); gateForm(""); });
+}
+
+/* ขอยืนยันอีเมลซ้ำโดยไม่รีโหลดหน้า ข้อมูลที่กรอกไว้จึงไม่หาย */
+var AFTER_AUTH=null;
+function reAuth(cb){
+  AFTER_AUTH=cb||null;
+  var em=VIEWER.email;
+  VIEWER.token="";
+  try{ localStorage.removeItem(TOKEN_KEY); }catch(e){}
+  document.body.classList.add("locked");
+  window.scrollTo({top:0,behavior:"smooth"});
+  gateForm(em);
+}
+
+function openApp(){
+  document.body.classList.remove("locked");
+  if(!document.querySelector(".who")){
+    var w=document.createElement("p");
+    w.className="who";
+    w.innerHTML="เข้าใช้งานในนาม "+esc(VIEWER.email)+" · ระบบบันทึกการเข้าใช้งานไว้เพื่อการตรวจสอบ · "
+      +'<a href="#" id="signout">ออกจากระบบ</a>';
+    document.querySelector(".top-in").appendChild(w);
+    document.getElementById("signout").addEventListener("click",function(e){
+      e.preventDefault(); clearSession(); location.reload();
+    });
+  }
+  logEvent("open");
+  if(AFTER_AUTH){ var f=AFTER_AUTH; AFTER_AUTH=null; setTimeout(f,300); }
+}
+
+if(loadSession()) openApp(); else gateForm("");
+
+/* ---------- submit to HR ---------- */
+document.getElementById("submitBtn").addEventListener("click",async function(){
+  var btn=this, err=document.getElementById("err3");
+  var rows=guard(); if(!rows) return;
+  if(!ENDPOINT){
+    err.textContent="ยังไม่ได้ตั้งค่าปลายทางการส่งข้อมูล กรุณาดาวน์โหลด CSV แล้วส่งอีเมลถึง "+HR_EMAIL;
+    err.hidden=false; return;
+  }
+  btn.disabled=true; btn.textContent="กำลังส่ง…";
+  var proj=readProject();
+  var ref=state.ref||("R-"+new Date().toISOString().slice(2,10).replace(/-/g,"")+"-"+Math.random().toString(36).slice(2,6).toUpperCase());
+  state.ref=ref; saveDraft();
+  var counts={base:0,fix:0,out:0}; rows.forEach(function(r){counts[r.s]++;});
+  var sres=await post({type:"response",ref:ref,email:VIEWER.email,token:VIEWER.token,at:stamp(),project:proj,note:val("p-note"),counts:counts,rows:rows});
+  var okSent=!!(sres&&sres.ok);
+  if(sres&&sres.error==="auth"){
+    btn.disabled=false; btn.textContent="ส่งข้อมูลให้ HR";
+    err.textContent="ต้องยืนยันอีเมลอีกครั้งก่อนส่ง ("+((sres.reason)||"")+") ข้อมูลที่กรอกไว้ทั้งหมดยังอยู่ครบ";
+    err.hidden=false;
+    reAuth(function(){ document.getElementById("submitBtn").click(); });
+    return;
+  }
+  if(okSent){
+    logEvent("submit",{ref:ref,project:proj.code||""});
+    flash("ส่งข้อมูลเรียบร้อย รหัสอ้างอิง "+ref+"<br><span style=\"font-weight:400\">แก้ไขแล้วกดส่งอีกครั้งได้ ระบบจะทับข้อมูลเดิมด้วยรหัสเดียวกัน</span>");
+    btn.textContent="ส่งข้อมูลอีกครั้ง";
+  }else{
+    err.textContent="ส่งไม่สำเร็จ ตรวจสัญญาณอินเทอร์เน็ต แล้วลองอีกครั้ง หรือดาวน์โหลด CSV ส่งอีเมลถึง "+HR_EMAIL;
+    err.hidden=false; btn.textContent="ส่งข้อมูลให้ HR";
+  }
+  btn.disabled=false;
+});
+
+/* ---------- boot ---------- */
+loadDraft();
+renderPositions();
+["p-code","p-name","p-role","p-contact","p-head","p-cycle","p-payer","p-note"].forEach(function(id){
+  var e=document.getElementById(id); if(e) e.addEventListener("change",saveDraft);
+});
+</script>
+</body>
+</html>
